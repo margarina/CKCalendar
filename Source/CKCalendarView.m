@@ -147,8 +147,6 @@
     self.onlyShowCurrentMonth = YES;
     self.adaptHeightToNumberOfWeeksInMonth = YES;
 
-    self.layer.cornerRadius = 6.0f;
-
     UIView *highlight = [[UIView alloc] initWithFrame:CGRectZero];
     highlight.backgroundColor = [UIColor colorWithWhite:1.0 alpha:0.2];
     highlight.layer.cornerRadius = 6.0f;
