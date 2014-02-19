@@ -20,12 +20,15 @@
 #import <QuartzCore/QuartzCore.h>
 #import "CKCalendarView.h"
 
-#define BUTTON_MARGIN 4
-#define CALENDAR_MARGIN 5
-#define TOP_HEIGHT 44
+#define BUTTON_MARGIN 5
+#define BUTTON_WIDTH 90
+#define BUTTON_HEIGHT 44
+#define BUTTON_IMAGE_HEIGHT 21
+#define CALENDAR_MARGIN 0
+#define TOP_HEIGHT 30
 #define DAYS_HEADER_HEIGHT 22
 #define DEFAULT_CELL_WIDTH 43
-#define CELL_BORDER_WIDTH 1
+#define CELL_BORDER_WIDTH 0
 
 #define UIColorFromRGB(rgbValue) [UIColor colorWithRed:((float)((rgbValue & 0xFF0000) >> 16))/255.0 green:((float)((rgbValue & 0xFF00) >> 8))/255.0 blue:((float)(rgbValue & 0xFF))/255.0 alpha:1.0]
 
@@ -104,7 +107,6 @@
 
 @interface CKCalendarView ()
 
-@property(nonatomic, strong) UIView *highlight;
 @property(nonatomic, strong) UILabel *titleLabel;
 @property(nonatomic, strong) UIButton *prevButton;
 @property(nonatomic, strong) UIButton *nextButton;
@@ -159,6 +161,7 @@
     [prevButton setImage:[UIImage imageNamed:@"left_arrow.png"] forState:UIControlStateNormal];
     prevButton.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleRightMargin;
     [prevButton addTarget:self action:@selector(_moveCalendarToPreviousMonth) forControlEvents:UIControlEventTouchUpInside];
+    prevButton.imageEdgeInsets = (UIEdgeInsets){0, -70, BUTTON_HEIGHT - BUTTON_IMAGE_HEIGHT, 0};
     [self addSubview:prevButton];
     self.prevButton = prevButton;
 
@@ -166,6 +169,7 @@
     [nextButton setImage:[UIImage imageNamed:@"right_arrow.png"] forState:UIControlStateNormal];
     nextButton.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleLeftMargin;
     [nextButton addTarget:self action:@selector(_moveCalendarToNextMonth) forControlEvents:UIControlEventTouchUpInside];
+    nextButton.imageEdgeInsets = (UIEdgeInsets){0, 70, BUTTON_HEIGHT - BUTTON_IMAGE_HEIGHT, 0};
     [self addSubview:nextButton];
     self.nextButton = nextButton;
 
@@ -174,7 +178,6 @@
     calendarContainer.layer.borderWidth = 1.0f;
     calendarContainer.layer.borderColor = [UIColor blackColor].CGColor;
     calendarContainer.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleWidth;
-    calendarContainer.layer.cornerRadius = 4.0f;
     calendarContainer.clipsToBounds = YES;
     [self addSubview:calendarContainer];
     self.calendarContainer = calendarContainer;
@@ -250,12 +253,11 @@
     newFrame.size.height = containerHeight + CALENDAR_MARGIN + TOP_HEIGHT;
     self.frame = newFrame;
 
-    self.highlight.frame = CGRectMake(1, 1, self.bounds.size.width - 2, 1);
-
+    CGSize prevNextButtonSize = {BUTTON_WIDTH, BUTTON_HEIGHT};
     self.titleLabel.text = [self.dateFormatter stringFromDate:_monthShowing];
     self.titleLabel.frame = CGRectMake(0, 0, self.bounds.size.width, TOP_HEIGHT);
-    self.prevButton.frame = CGRectMake(BUTTON_MARGIN, BUTTON_MARGIN, 48, 38);
-    self.nextButton.frame = CGRectMake(self.bounds.size.width - 48 - BUTTON_MARGIN, BUTTON_MARGIN, 48, 38);
+    self.prevButton.frame = (CGRect){BUTTON_MARGIN, BUTTON_MARGIN, prevNextButtonSize};
+    self.nextButton.frame = (CGRect){self.bounds.size.width - prevNextButtonSize.width - BUTTON_MARGIN, BUTTON_MARGIN, prevNextButtonSize};
 
     self.calendarContainer.frame = CGRectMake(CALENDAR_MARGIN, CGRectGetMaxY(self.titleLabel.frame), containerWidth, containerHeight);
     self.daysHeader.frame = CGRectMake(0, 0, self.calendarContainer.frame.size.width, DAYS_HEADER_HEIGHT);
@@ -418,7 +420,7 @@
     [self setDayOfWeekBottomColor:UIColorFromRGB(0xCCCFD5) topColor:[UIColor whiteColor]];
 
     [self setDateFont:[UIFont boldSystemFontOfSize:16.0f]];
-    [self setDateBorderColor:UIColorFromRGB(0xDAE1E6)];
+    [self setDateBorderColor:[UIColor whiteColor]];
 }
 
 - (CGRect)_calculateDayCellFrame:(NSDate *)date {
@@ -427,7 +429,10 @@
 	
     NSInteger placeInWeek = [self _placeInWeekForDate:date];
 
-    return CGRectMake(placeInWeek * (self.cellWidth + CELL_BORDER_WIDTH), (row * (self.cellWidth + CELL_BORDER_WIDTH)) + CGRectGetMaxY(self.daysHeader.frame) + CELL_BORDER_WIDTH, self.cellWidth, self.cellWidth);
+    return CGRectMake(placeInWeek * (self.cellWidth + CELL_BORDER_WIDTH),
+                      (row * (self.cellWidth + CELL_BORDER_WIDTH)) + CGRectGetMaxY(self.daysHeader.frame) + CELL_BORDER_WIDTH,
+                      self.cellWidth,
+                      self.cellWidth);
 }
 
 - (void)_moveCalendarToNextMonth {
