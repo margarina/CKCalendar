@@ -294,8 +294,7 @@
         dateButton.date = date;
         CKDateItem *item = [[CKDateItem alloc] init];
         if ([self _dateIsToday:dateButton.date]) {
-            item.textColor = UIColorFromRGB(0xF2F2F2);
-            item.backgroundColor = [UIColor lightGrayColor];
+            item.textColor = [UIColor colorWithRed:65.0/255 green:148.0/255 blue:184.0/255 alpha:1.0];
         } else if (!self.onlyShowCurrentMonth && [self _compareByMonth:date toDate:self.monthShowing] != NSOrderedSame) {
             item.textColor = [UIColor lightGrayColor];
         }
