@@ -96,7 +96,7 @@
     self = [super init];
     if (self) {
         self.backgroundColor = UIColorFromRGB(0xF2F2F2);
-        self.selectedBackgroundColor = UIColorFromRGB(0x70AEC9);
+        self.selectedBackgroundColor = UIColorFromRGB(0x00AAFA);
         self.textColor = UIColorFromRGB(0x393B40);
         self.selectedTextColor = UIColorFromRGB(0xF2F2F2);
     }
