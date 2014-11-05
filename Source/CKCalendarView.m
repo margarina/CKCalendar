@@ -148,7 +148,7 @@
     self.calendarStartDay = firstDay;
     self.onlyShowCurrentMonth = YES;
     self.adaptHeightToNumberOfWeeksInMonth = YES;
-
+    
     // SET UP THE HEADER
     UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectZero];
     titleLabel.textAlignment = NSTextAlignmentCenter;
@@ -260,6 +260,7 @@
     self.nextButton.frame = (CGRect){self.bounds.size.width - prevNextButtonSize.width - BUTTON_MARGIN, BUTTON_MARGIN, prevNextButtonSize};
 
     self.calendarContainer.frame = CGRectMake(CALENDAR_MARGIN, CGRectGetMaxY(self.titleLabel.frame), containerWidth, containerHeight);
+    self.calendarContainer.backgroundColor = UIColorFromRGB(0xF2F2F2);
     self.daysHeader.frame = CGRectMake(0, 0, self.calendarContainer.frame.size.width, DAYS_HEADER_HEIGHT);
 
     CGRect lastDayFrame = CGRectZero;
@@ -306,9 +307,11 @@
         if (self.selectedDate && [self date:self.selectedDate isSameDayAsDate:date]) {
             [dateButton setTitleColor:item.selectedTextColor forState:UIControlStateNormal];
             dateButton.backgroundColor = item.selectedBackgroundColor;
+            dateButton.layer.cornerRadius = dateButton.bounds.size.width/2;
         } else {
             [dateButton setTitleColor:item.textColor forState:UIControlStateNormal];
             dateButton.backgroundColor = item.backgroundColor;
+            dateButton.layer.cornerRadius = 0;
         }
 
         dateButton.frame = [self _calculateDayCellFrame:date];
